@@ -17,4 +17,11 @@ app.use(router);
 const authStore = useAuthStore();
 authStore.initializeAuth();
 
+// Add to window for debugging (remove in production)
+if (import.meta.env.DEV) {
+  window.authStore = authStore;
+  window.clearAuth = () => authStore.forceLogout();
+  window.debugAuth = () => authStore.debugAuthState();
+}
+
 app.mount("#app");

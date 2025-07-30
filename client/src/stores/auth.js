@@ -91,9 +91,26 @@ export const useAuthStore = defineStore("auth", {
         return data;
       } catch (error) {
         // If fetching user fails, clear auth data
+        console.log("fetchCurrentUser failed, clearing auth data:", error.message);
         this.clearAuthData();
         throw error;
       }
+    },
+
+    // Debug method to check auth state
+    debugAuthState() {
+      console.log("Auth Store Debug:", {
+        isAuthenticated: this.isAuthenticated,
+        hasToken: !!this.token,
+        hasUser: !!this.user,
+        localStorageToken: !!localStorage.getItem('token')
+      });
+    },
+
+    // Force clear all auth data
+    forceLogout() {
+      console.log("Force logout - clearing all auth data");
+      this.clearAuthData();
     },
   },
 });

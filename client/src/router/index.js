@@ -53,27 +53,30 @@ router.beforeEach((to, from, next) => {
 
   console.log("Router guard:", {
     to: to.name,
+    from: from.name,
     isAuthenticated: authStore.isAuthenticated,
     hasToken: !!authStore.token,
     hasUser: !!authStore.user,
+    localStorage: !!localStorage.getItem('token')
   });
 
-  // Allow navigation to protected routes only if authenticated
-  if (to.meta.requiresAuth && !authStore.isAuthenticated) {
-    console.log("Redirecting to login - auth required but not authenticated");
-    return next("/login");
+  // For register/login pages, only redirect if user is FULLY authenticated
+  // (has token, user data, and authentication is confirmed)
+  if (to.name === "Register" || to.name === "Login") {
+    // Only redirect if user is completely authenticated with valid session
+    if (authStore.isAuthenticated && authStore.token && authStore.user) {
+      console.log("Redirecting authenticated user away from auth pages");
+      return next("/trainees");
+    }
+    // Otherwise, allow access to register/login pages
+    console.log("Allowing access to auth page:", to.name);
+    return next();
   }
 
-  // Only redirect if user is truly authenticated and trying to access auth pages
-  // This prevents bouncing when auth state is being initialized
-  if (
-    (to.name === "Login" || to.name === "Register") &&
-    authStore.isAuthenticated &&
-    authStore.token &&
-    authStore.user
-  ) {
-    console.log("Redirecting to trainees - user already authenticated");
-    return next("/trainees");
+  // For protected routes, require authentication
+  if (to.meta.requiresAuth && !authStore.isAuthenticated) {
+    console.log("Redirecting to login - protected route requires auth");
+    return next("/login");
   }
 
   console.log("Allowing navigation to", to.name);
