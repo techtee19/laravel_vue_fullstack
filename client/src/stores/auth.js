@@ -62,26 +62,17 @@ export const useAuthStore = defineStore("auth", {
     },
 
     initializeAuth() {
-      const token = localStorage.getItem("token");
-      console.log(
-        "Initializing auth with token:",
-        token ? "exists" : "not found"
-      );
-
-      if (token) {
-        this.token = token;
-        this.isAuthenticated = true;
-        api.setAuthToken(token);
-
-        // Validate token by fetching current user
-        this.fetchCurrentUser().catch(() => {
-          // If token is invalid, clear auth data
-          console.log("Token validation failed, clearing auth data");
-          this.clearAuthData();
-        });
-      } else {
-        this.clearAuthData();
-      }
+      // TEMPORARY FIX: Clear everything on init to prevent redirect issues
+      console.log("Clearing all auth data on init to prevent redirect issues");
+      this.clearAuthData();
+      
+      // Comment out token validation for now
+      // const token = localStorage.getItem("token");
+      // if (token) {
+      //   this.token = token;
+      //   api.setAuthToken(token);
+      //   this.fetchCurrentUser()...
+      // }
     },
 
     async fetchCurrentUser() {
@@ -91,7 +82,10 @@ export const useAuthStore = defineStore("auth", {
         return data;
       } catch (error) {
         // If fetching user fails, clear auth data
-        console.log("fetchCurrentUser failed, clearing auth data:", error.message);
+        console.log(
+          "fetchCurrentUser failed, clearing auth data:",
+          error.message
+        );
         this.clearAuthData();
         throw error;
       }
@@ -103,7 +97,7 @@ export const useAuthStore = defineStore("auth", {
         isAuthenticated: this.isAuthenticated,
         hasToken: !!this.token,
         hasUser: !!this.user,
-        localStorageToken: !!localStorage.getItem('token')
+        localStorageToken: !!localStorage.getItem("token"),
       });
     },
 

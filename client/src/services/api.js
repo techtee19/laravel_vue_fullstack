@@ -17,24 +17,24 @@ apiClient.interceptors.request.use((config) => {
   return config;
 });
 
-// Add response interceptor to handle auth errors
-apiClient.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    if (error.response?.status === 401) {
-      localStorage.removeItem("token");
-      // Clear auth store if available
-      if (typeof window !== "undefined" && window.authStore) {
-        window.authStore.clearAuthData();
-      }
-      // Only redirect if not already on login page
-      if (window.location.pathname !== "/login") {
-        window.location.href = "/login";
-      }
-    }
-    return Promise.reject(error);
-  }
-);
+// TEMPORARILY DISABLED - Add response interceptor to handle auth errors
+// apiClient.interceptors.response.use(
+//   (response) => response,
+//   (error) => {
+//     if (error.response?.status === 401) {
+//       localStorage.removeItem("token");
+//       // Clear auth store if available
+//       if (typeof window !== "undefined" && window.authStore) {
+//         window.authStore.clearAuthData();
+//       }
+//       // Only redirect if not already on login page
+//       if (window.location.pathname !== "/login") {
+//         window.location.href = "/login";
+//       }
+//     }
+//     return Promise.reject(error);
+//   }
+// );
 
 export default {
   getTrainees(params = {}) {

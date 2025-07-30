@@ -35,12 +35,15 @@ class AuthController extends Controller
             'user_id' => $user->id,
         ]);
 
-        $token = $user->createToken('auth_token')->plainTextToken;
-
+        // Don't create token on registration - require separate login
         return response()->json([
-            'user' => $user,
+            'success' => true,
+            'message' => 'Registration successful! Please log in to continue.',
+            'user' => [
+                'name' => $user->name,
+                'email' => $user->email
+            ],
             'trainee' => $trainee,
-            'token' => $token,
         ], 201);
     }
 

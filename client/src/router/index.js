@@ -57,18 +57,11 @@ router.beforeEach((to, from, next) => {
     isAuthenticated: authStore.isAuthenticated,
     hasToken: !!authStore.token,
     hasUser: !!authStore.user,
-    localStorage: !!localStorage.getItem('token')
+    localStorage: !!localStorage.getItem("token"),
   });
 
-  // For register/login pages, only redirect if user is FULLY authenticated
-  // (has token, user data, and authentication is confirmed)
+  // SIMPLIFIED: Always allow access to register and login pages
   if (to.name === "Register" || to.name === "Login") {
-    // Only redirect if user is completely authenticated with valid session
-    if (authStore.isAuthenticated && authStore.token && authStore.user) {
-      console.log("Redirecting authenticated user away from auth pages");
-      return next("/trainees");
-    }
-    // Otherwise, allow access to register/login pages
     console.log("Allowing access to auth page:", to.name);
     return next();
   }
