@@ -105,7 +105,8 @@ export default {
     async fetchTrainingCenters() {
       try {
         const response = await api.getTrainingCenters();
-        this.trainingCenters = response.data.data.data;
+        this.trainingCenters = response.data.data;
+        console.log("Training centers loaded:", this.trainingCenters);
       } catch (error) {
         console.error(
           "Error fetching training centers:",
@@ -115,15 +116,28 @@ export default {
     },
 
     async submitForm() {
+      this.errors = []; // Clear previous errors
       try {
-        const response = await api.createTrainee(this.form);
+        // Remove user_id from form as it's handled by backend
+        const formData = {
+          name: this.form.name,
+          skill: parseInt(this.form.skill),
+          bio: this.form.bio,
+          training_center_id: parseInt(this.form.training_center_id),
+        };
+
+        const response = await api.createTrainee(formData);
         if (response.data.success) {
           alert("Trainee created successfully.");
           this.$router.push({ name: "TraineesList" });
         }
       } catch (error) {
         console.error("Error submitting form:", error);
-        this.errors.push("Failed to create trainee.");
+        if (error.response?.data?.message) {
+          this.errors.push(error.response.data.message);
+        } else {
+          this.errors.push("Failed to create trainee.");
+        }
       }
     },
   },

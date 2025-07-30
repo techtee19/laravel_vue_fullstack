@@ -18,6 +18,7 @@ return new class extends Migration
             $table->integer('skill');
             $table->text('bio');
             $table->foreignId('training_center_id')->constrained('training_centers')->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
         });
     }
 

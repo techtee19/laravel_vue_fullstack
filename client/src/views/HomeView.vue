@@ -1,16 +1,29 @@
 <template>
-  <div class="px-8 py-12 text-center">
-    <h1>Welcome to the Trainee Network</h1>
-    <p>Click the button below to view the list of trainees.</p>
-
-    <router-link :to="{ name: 'TraineesList' }" class="inline-block mt-4 btn">
-      Find Trainees!
-    </router-link>
+  <div>
+    <h1>Welcome to the Training Center App</h1>
+    <router-link v-if="!isAuthenticated" to="/login">Login</router-link> |
+    <router-link v-if="!isAuthenticated" to="/register">Register</router-link>
+    <router-link v-if="isAuthenticated" to="/trainees">Trainees</router-link>
+    <button v-if="isAuthenticated" @click="logout">Logout</button>
   </div>
 </template>
 
-<script>
-export default {};
+<script setup>
+import { ref } from "vue";
+import { useRouter } from "vue-router";
+import api from "../services/api";
+
+const router = useRouter();
+const isAuthenticated = ref(!!localStorage.getItem("token"));
+
+function logout() {
+  api.setAuthToken(localStorage.getItem("token"));
+  api.logout().finally(() => {
+    localStorage.removeItem("token");
+    isAuthenticated.value = false;
+    router.push("/login");
+  });
+}
 </script>
 
 <style lang="scss" scoped></style>

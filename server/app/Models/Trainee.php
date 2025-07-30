@@ -12,6 +12,7 @@ class Trainee extends Model
         'skill',
         'bio',
         'training_center_id',
+        'user_id',
     ];
 
     /** @use HasFactory<\Database\Factories\TraineeFactory> */
@@ -20,5 +21,10 @@ class Trainee extends Model
     public function training_center()
     {
         return $this->belongsTo(TrainingCenter::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }
