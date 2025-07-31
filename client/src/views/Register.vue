@@ -218,12 +218,12 @@ onMounted(async () => {
   } catch (e) {
     console.error("Failed to load training centers:", e);
     error.value = "Failed to load training centers";
-    
+
     // Fallback to mock data if API fails
     centers.value = [
       { id: 1, name: "Tech Training Center" },
       { id: 2, name: "Software Development Academy" },
-      { id: 3, name: "Programming Bootcamp" }
+      { id: 3, name: "Programming Bootcamp" },
     ];
   }
 });
@@ -240,10 +240,10 @@ async function register() {
       bio: bio.value,
       training_center_id: training_center_id.value,
     };
-    
+
     // Call API directly instead of using auth store to avoid auto-login
     await api.register(payload);
-    
+
     // Show success message and redirect to login
     alert("Registration successful! Please log in to continue.");
     router.push("/login");

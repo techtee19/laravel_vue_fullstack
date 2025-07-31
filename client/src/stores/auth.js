@@ -65,7 +65,7 @@ export const useAuthStore = defineStore("auth", {
       // TEMPORARY FIX: Clear everything on init to prevent redirect issues
       console.log("Clearing all auth data on init to prevent redirect issues");
       this.clearAuthData();
-      
+
       // Comment out token validation for now
       // const token = localStorage.getItem("token");
       // if (token) {
